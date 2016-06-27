@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">EnglishIsland</string>
+    <string name="app_name">English Island</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="Title">جزیره زبان منوچهرزاده</string>
+    <string name="intro">معرفی آموزشگاه</string>
+    <string name="news">اطلاعیه ها</string>
+    <string name="clips">کلیپ ها</string>
+    <string name="dls">دانلود ها</string>
+    <string name="FAQ">سوالات متدوال</string>
+    <string name="about">درباره توسعه دهنده</string>
+    <string name="buy">خرید بسته آموزشی</string>
+    <string name="session1">جلسه اول</string>
+    <string name="session10">جلسه دهم</string>
+    <string name="session2">جلسه دوم</string>
+    <string name="session3">جلسه سوم</string>
+    <string name="session4">جلسه چهارم</string>
+    <string name="session5">جلسه پنجم</string>
+    <string name="session6">جلسه ششم</string>
+    <string name="session7">جلسه هفتم</string>
+    <string name="session8">جلسه هشتم</string>
+    <string name="session9">جلسه نهم</string>
 </resources>
