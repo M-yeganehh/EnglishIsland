@@ -13,6 +13,7 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
 //1234567890-
+        //l;;;;
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("BYekan.ttf")
                 .setFontAttrId(R.attr.fontPath)
