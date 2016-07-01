@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class Lesson implements Serializable {
     String name;
-    int pic;
+    int IsPremium;
 
     public String getName() {
         return name;
@@ -17,11 +17,11 @@ public class Lesson implements Serializable {
         this.name = name;
     }
 
-    public int getPic() {
-        return pic;
+    public int getIsPremium() {
+        return IsPremium;
     }
 
-    public void setPic(int pic) {
-        this.pic = pic;
+    public void setIsPremium(int pic) {
+        this.IsPremium = pic;
     }
 }

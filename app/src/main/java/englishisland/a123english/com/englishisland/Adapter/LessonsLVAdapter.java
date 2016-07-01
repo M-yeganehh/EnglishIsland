@@ -71,7 +71,11 @@ public class LessonsLVAdapter extends BaseAdapter {
         holder.tvName.setText(lesson.get(position).getName());
         //  holder.ivPic.setImageResource(context.getResources().getIdentifier("drawable/" + "anani.png", null, context.getPackageName()));
 
-        holder.ivPic.setImageResource(lesson.get(position).getPic());
+        if (lesson.get(position).getIsPremium() == 0){
+            holder.ivPic.setImageResource(R.drawable.ic_lock_black_24dp);
+        }else if (lesson.get(position).getIsPremium() == 1){
+            holder.ivPic.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
+        }
         return convertView;
 
     }
