@@ -57,7 +57,7 @@ public class LessonsLVAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
 
-            convertView = inflater.inflate(R.layout.staff_list_item, null);
+            convertView = inflater.inflate(R.layout.lesson_list_item, null);
             holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
             holder.ivPic = (ImageView) convertView.findViewById(R.id.ivPic);
             convertView.setTag(holder);

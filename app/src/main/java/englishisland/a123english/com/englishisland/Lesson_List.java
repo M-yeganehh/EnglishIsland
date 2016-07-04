@@ -2,19 +2,15 @@ package englishisland.a123english.com.englishisland;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,80 +28,273 @@ import util.IabHelper;
 import util.IabResult;
 import util.Inventory;
 import util.Purchase;
+import util.SecurePreferences;
+
 
 public class Lesson_List extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<Lesson> LessonsList = new ArrayList<>();
-//1231231234564567897897889
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
-    SharedPreferences wmbPreference;
-    // Debug tag, for logging
+    SecurePreferences prefs;    // Debug tag, for logging
     static final String TAG = "Mamaly";
-
+    ListView lvMain;
     // SKUs for our products: the premium upgrade (non-consumable)
-    static final String SKU = "Lesson";
+    static final String SKU2 = "Lesson2";
+    static final String SKU3 = "Lesson3";
+    static final String SKU4 = "Lesson4";
+    static final String SKU5 = "Lesson5";
+    static final String SKU6 = "Lesson6";
+    static final String SKU7 = "Lesson7";
+    static final String SKU8 = "Lesson8";
+    static final String SKU9 = "Lesson9";
+    static final String SKU10 = "Lesson10";
 
     // Does the user have the premium upgrade?
-    boolean mIsPremium = false;
+    int Lesson1_access;
+    int Lesson2_access;
+    int Lesson3_access;
+    int Lesson4_access;
+    int Lesson5_access;
+    int Lesson6_access;
+    int Lesson7_access;
+    int Lesson8_access;
+    int Lesson9_access;
+    int Lesson10_access;
 
     // (arbitrary) request code for the purchase flow
     static final int RC_REQUEST = 1001;
-
+    LessonsLVAdapter LVAdapter;
     IabHelper mHelper;
     List<Integer> PremiumAccess;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lesson_list);
-        String languageToLoad = "fa"; // your language
-        Locale locale = new Locale(languageToLoad);
+        Locale locale = new Locale("fa");
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
-        this.setContentView(R.layout.lesson_list);
-        loadData();
+        getBaseContext().getResources().updateConfiguration(config,getBaseContext().getResources().getDisplayMetrics());
+        setContentView(R.layout.lesson_list);
+
+        // prefs = new SecurePreferences(Lesson_List.this, "prefs", "SometopSecretKey1235", true);
+// Put (all puts are automatically committed)
+// Get
+        prefs = SecurePreferences.getInstance(Lesson_List.this,"tutorialsFACE_Prefs"); //provide context & preferences name.
+
+        //Storing the username inside shared preferences
+
+        //Retrieving username from encrypted shared preferences
+
+
+          //      prefs = new SecurePreferences(Lesson_List.this);
+
+                Lesson1_access = prefs.getInt("Lesson1", 1);
+                Lesson2_access = prefs.getInt("Lesson2", 0);
+                Lesson3_access = prefs.getInt("Lesson3", 0);
+                Lesson4_access = prefs.getInt("Lesson4", 0);
+                Lesson5_access = prefs.getInt("Lesson5", 0);
+                Lesson6_access = prefs.getInt("Lesson6", 0);
+                Lesson7_access = prefs.getInt("Lesson7", 0);
+                Lesson8_access = prefs.getInt("Lesson8", 0);
+                Lesson9_access = prefs.getInt("Lesson9", 0);
+                Lesson10_access = prefs.getInt("Lesson10", 0);
+
+
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.Title);
         setSupportActionBar(toolbar);
 
+
         String base64EncodedPublicKey = getString(R.string.key);
+
+
+        Log.d(TAG, "Creating IAB helper.");
         mHelper = new IabHelper(this, base64EncodedPublicKey);
+
+        // enable debug logging (for a production application, you should set this to false).
         mHelper.enableDebugLogging(true);
+
+        // Start setup. This is asynchronous and the specified listener
+        // will be called once setup completes.
+        Log.d(TAG, "Starting setup.");
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
+                Log.d(TAG, "Setup finished.");
+
                 if (!result.isSuccess()) {
                     // Oh noes, there was a problem.
-                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
+                    complain("Problem setting up in-app billing: " + result);
+                    return;
                 }
+
                 // Have we been disposed of in the meantime? If so, quit.
                 if (mHelper == null) return;
 
                 // IAB is fully set up. Now, let's get an inventory of stuff we own.
                 Log.d(TAG, "Setup successful. Querying inventory.");
-              ///  mHelper.queryInventoryAsync(true, mGotInventoryListener);
+                List<String> additionalSkuList = new ArrayList<String>();
+                additionalSkuList.add(SKU2);
+                additionalSkuList.add(SKU3);
+                additionalSkuList.add(SKU4);
+                additionalSkuList.add(SKU5);
+                additionalSkuList.add(SKU6);
+                additionalSkuList.add(SKU7);
+                additionalSkuList.add(SKU8);
+                additionalSkuList.add(SKU9);
+                additionalSkuList.add(SKU10);
+               /* mHelper.queryInventoryAsync(false, additionalSkuList,
+                        mGotInventoryListener);  */          }
+        });
+
+       PopulateListView();
+
+        lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0: {
+                        Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Lesson_List.this, Class_Activity.class).putExtra("Lesson", 1));
+                        break;
+                    }
+                    case 1: {
+                        if (Lesson2_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU2, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson2_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+
+                        }
+                        break;
+                    }case 2: {
+                        if (Lesson3_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU3, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson3_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+
+                        }
+                        break;
+                    }case 3: {
+                        if (Lesson4_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU4, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson4_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    }case 4: {
+                        if (Lesson5_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU5, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson5_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+
+                        }
+                        break;
+                    }case 5: {
+                        if (Lesson6_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU6, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson6_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+
+                        }
+                        break;
+                    }case 6: {
+                        if (Lesson7_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU7, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson7_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+
+                        }
+                        break;
+                    }case 7: {
+                        if (Lesson8_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU8, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson8_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+
+                        }
+                        break;
+                    }case 8: {
+                        if (Lesson9_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU9, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson9_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+
+                        }
+                        break;
+                    }case 9: {
+                        if (Lesson10_access == 0){
+                            if (mHelper != null) mHelper.flagEndAsync();
+                            String payload = "mamad1376";
+                            mHelper.launchPurchaseFlow(Lesson_List.this, SKU10, RC_REQUEST,
+                                    mPurchaseFinishedListener, payload);
+                        }else if (Lesson10_access == 1){
+                            Toast.makeText(getApplicationContext(), "you have access to lesson" + position++, Toast.LENGTH_SHORT).show();
+
+                        }
+                        break;
+                    }
+
+
+                }
 
             }
         });
 
-        ListView lvMain = (ListView) findViewById(R.id.LessonsLV);
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+
+    }
+
+    private void PopulateListView() {
+        lvMain = (ListView) findViewById(R.id.LessonsLV);
+        LessonsList.clear();
         PremiumAccess = new ArrayList<Integer>();
-        PremiumAccess.add(1);
-        PremiumAccess.add(0);
-        PremiumAccess.add(0);
-        PremiumAccess.add(0);
-        PremiumAccess.add(0);
-        PremiumAccess.add(0);
-        PremiumAccess.add(0);
-        PremiumAccess.add(0);
-        PremiumAccess.add(0);
-        PremiumAccess.add(0);
+        PremiumAccess.add(Lesson1_access);
+        PremiumAccess.add(Lesson2_access);
+        PremiumAccess.add(Lesson3_access);
+        PremiumAccess.add(Lesson4_access);
+        PremiumAccess.add(Lesson5_access);
+        PremiumAccess.add(Lesson6_access);
+        PremiumAccess.add(Lesson7_access);
+        PremiumAccess.add(Lesson8_access);
+        PremiumAccess.add(Lesson9_access);
+        PremiumAccess.add(Lesson10_access);
         ArrayList<String> names = new ArrayList<>();
         names.add(getString(R.string.session1));
         names.add(getString(R.string.session2));
@@ -125,37 +314,10 @@ public class Lesson_List extends AppCompatActivity
             lesson.setIsPremium(PremiumAccess.get(i));
             LessonsList.add(lesson);
         }
-
-        LessonsLVAdapter LVAdapter = new LessonsLVAdapter(getApplicationContext(), LessonsList);
+        LVAdapter = new LessonsLVAdapter(getApplicationContext(), LessonsList);
         lvMain.setAdapter(LVAdapter);
-        lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-      /*          if (mIsPremium == false) {
-                    if (mHelper != null) mHelper.flagEndAsync();
-                    Log.d(TAG, "Launching purchase flow for gas.");
-                    String payload = "mamad1376";
-                    mHelper.launchPurchaseFlow(Lesson_List.this, SKU, RC_REQUEST,
-                            mPurchaseFinishedListener, payload);
-                } else if (mIsPremium) {
-                    Toast.makeText(getApplicationContext(), "Premium", Toast.LENGTH_SHORT).show();
-                }*/
-            }
-        });
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-
     }
+
     IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
             Log.d(TAG, "Query inventory finished.");
@@ -178,14 +340,49 @@ public class Lesson_List extends AppCompatActivity
              */
 
             // Do we have the premium upgrade?
-            Purchase premiumPurchase = inventory.getPurchase(SKU);
-            mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
+            Purchase Lesson2 = inventory.getPurchase(SKU2);
+            Purchase Lesson3 = inventory.getPurchase(SKU3);
+            Purchase Lesson4 = inventory.getPurchase(SKU4);
+            Purchase Lesson5 = inventory.getPurchase(SKU5);
+            Purchase Lesson6 = inventory.getPurchase(SKU6);
+            Purchase Lesson7 = inventory.getPurchase(SKU7);
+            Purchase Lesson8 = inventory.getPurchase(SKU8);
+            Purchase Lesson9 = inventory.getPurchase(SKU9);
+            Purchase Lesson10 = inventory.getPurchase(SKU10);
 
-            Toast.makeText(getApplicationContext(), mIsPremium + "", Toast.LENGTH_SHORT).show();
+
+
+            if (Lesson2 != null) {
+                Lesson2_access = 1;
+            } else if (Lesson3 != null && verifyDeveloperPayload(Lesson3)) {
+                Lesson3_access = 1;
+            } else if (Lesson4 != null && verifyDeveloperPayload(Lesson4)) {
+                Lesson4_access = 1;
+            } else if (Lesson5 != null && verifyDeveloperPayload(Lesson5)) {
+                Lesson5_access = 1;
+            } else if (Lesson6 != null && verifyDeveloperPayload(Lesson6)) {
+                Lesson6_access = 1;
+            } else if (Lesson7 != null && verifyDeveloperPayload(Lesson7)) {
+                Lesson7_access = 1;
+            } else if (Lesson8 != null && verifyDeveloperPayload(Lesson8)) {
+                Lesson8_access = 1;
+            } else if (Lesson9 != null && verifyDeveloperPayload(Lesson9)) {
+                Lesson9_access = 1;
+            } else if (Lesson10 != null && verifyDeveloperPayload(Lesson10)) {
+                Lesson10_access = 1;
+            }
+
+
+            PopulateListView();
+            LVAdapter.notifyDataSetChanged();
+            saveData();
+
+
         }
+
+
+
     };
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -203,30 +400,6 @@ public class Lesson_List extends AppCompatActivity
     boolean verifyDeveloperPayload(Purchase p) {
         String payload = p.getDeveloperPayload();
 
-
-        /*
-         * TODO: verify that the developer payload of the purchase is correct. It will be
-         * the same one that you sent when initiating the purchase.
-         *
-         * WARNING: Locally generating a random string when starting a purchase and
-         * verifying it here might seem like a good approach, but this will fail in the
-         * case where the user purchases an item on one device and then uses your app on
-         * a different device, because on the other device you will not have access to the
-         * random string you originally generated.
-         *
-         * So a good developer payload has these characteristics:
-         *
-         * 1. If two different users purchase an item, the payload is different between them,
-         *    so that one user's purchase can't be replayed to another user.
-         *
-         * 2. The payload must be such that you can verify it even when the app wasn't the
-         *    one who initiated the purchase flow (so that items purchased by the user on
-         *    one device work on other devices owned by the user).
-         *
-         * Using your own server to store and verify developer payloads across app
-         * installations is recommended.
-         */
-
         return true;
     }
 
@@ -240,49 +413,60 @@ public class Lesson_List extends AppCompatActivity
 
             if (result.isFailure()) {
                 complain("Error purchasing: " + result);
-                setWaitScreen(false);
                 return;
             }
             if (!verifyDeveloperPayload(purchase)) {
                 complain("Error purchasing. Authenticity verification failed.");
-                setWaitScreen(false);
                 return;
             }
 
             Log.d(TAG, "Purchase successful.");
 
-            if (purchase.getSku().equals(SKU)) {
-                // bought 1/4 tank of gas. So consume it.
-                Log.d(TAG, "Purchase is gas. Starting gas consumption.");
-                mIsPremium = true;
-               // mHelper.consumeAsync(purchase, mConsumeFinishedListener);
+            if (purchase.getSku().equals(SKU2)) {
+                Lesson2_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 2", Toast.LENGTH_SHORT).show();
             }
+            if (purchase.getSku().equals(SKU3)) {
+                Lesson3_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 3", Toast.LENGTH_SHORT).show();
+            }
+            if (purchase.getSku().equals(SKU4)) {
+                Lesson4_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 4", Toast.LENGTH_SHORT).show();
+            }
+            if (purchase.getSku().equals(SKU5)) {
+                Lesson5_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 5", Toast.LENGTH_SHORT).show();
+            }
+            if (purchase.getSku().equals(SKU6)) {
+                Lesson6_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 6", Toast.LENGTH_SHORT).show();
+            }
+            if (purchase.getSku().equals(SKU7)) {
+                Lesson7_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 7", Toast.LENGTH_SHORT).show();
+            }
+            if (purchase.getSku().equals(SKU8)) {
+                Lesson8_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 8", Toast.LENGTH_SHORT).show();
+            }
+            if (purchase.getSku().equals(SKU9)) {
+                Lesson9_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 9", Toast.LENGTH_SHORT).show();
+            }
+            if (purchase.getSku().equals(SKU10)) {
+                Lesson10_access = 1;
+                Toast.makeText(getApplicationContext(), "purchase successful 10", Toast.LENGTH_SHORT).show();
+            }
+
+            PopulateListView();
+            LVAdapter.notifyDataSetChanged();
+          saveData();
+
         }
     };
 
-    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
-        public void onConsumeFinished(Purchase purchase, IabResult result) {
-            Log.d(TAG, "Consumption finished. Purchase: " + purchase + ", result: " + result);
 
-            // if we were disposed of in the meantime, quit.
-            if (mHelper == null) return;
-
-            // We know this is the "gas" sku because it's the only one we consume,
-            // so we don't check which sku was consumed. If you have more than one
-            // sku, you probably should check...
-            if (result.isSuccess()) {
-                // successfully consumed, so we apply the effects of the item in our
-                // game world's logic, which in our case means filling the gas tank a bit
-                Log.d(TAG, "Consumption successful. Provisioning.");
-                mIsPremium  = true;
-            }
-            else {
-                complain("Error while consuming: " + result);
-            }
-            setWaitScreen(false);
-            Log.d(TAG, "End consumption flow.");
-        }
-    };
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -293,27 +477,6 @@ public class Lesson_List extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -322,7 +485,8 @@ public class Lesson_List extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_intro) {
-            // Handle the camera action
+
+            startActivity(new Intent(Lesson_List.this, Class_Activity.class));
         } else if (id == R.id.nav_news) {
 
         } else if (id == R.id.nav_clips) {
@@ -348,38 +512,34 @@ public class Lesson_List extends AppCompatActivity
         mHelper = null;
     }
 
-    void setWaitScreen(boolean set) {
 
-    }
     void complain(String message) {
         Log.e(TAG, "**** TrivialDrive Error: " + message);
-        alert("Error: " + message);
+        //alert("Error: " + message);
     }
-
+/*
     void alert(String message) {
         AlertDialog.Builder bld = new AlertDialog.Builder(this);
         bld.setMessage(message);
         bld.setNeutralButton("OK", null);
         Log.d(TAG, "Showing alert dialog: " + message);
         bld.create().show();
-    }
+    }*/
 
     void saveData() {
+        prefs.putInt("Lesson2", Lesson2_access);
+        prefs.putInt("Lesson3", Lesson3_access);
+        prefs.putInt("Lesson4", Lesson4_access);
+        prefs.putInt("Lesson5", Lesson5_access);
+        prefs.putInt("Lesson6", Lesson6_access);
+        prefs.putInt("Lesson7", Lesson7_access);
+        prefs.putInt("Lesson8", Lesson8_access);
+        prefs.putInt("Lesson9", Lesson9_access);
+        prefs.putInt("Lesson10", Lesson10_access);
+        prefs.commit();
 
-        /*
-         * WARNING: on a real application, we recommend you save data in a secure way to
-         * prevent tampering. For simplicity in this sample, we simply store the data using a
-         * SharedPreferences.
-         */
 
-        SharedPreferences.Editor editor = wmbPreference.edit();
-        editor.putBoolean("premium", mIsPremium);
-        editor.apply();
     }
 
-    void loadData() {
 
-        wmbPreference = PreferenceManager.getDefaultSharedPreferences(this);
-        mIsPremium = wmbPreference.getBoolean("premium", false);
-    }
 }

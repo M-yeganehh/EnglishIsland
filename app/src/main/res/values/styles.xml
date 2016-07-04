@@ -26,5 +26,16 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
-
+    <style name="TextAppearance.BYekan" parent="android:TextAppearance">
+        <!-- Custom Attr-->
+        <item name="fontPath">fonts/BYekan.ttf</item>
+    </style>
+    <style name="TextAppearance.mvboli" parent="android:TextAppearance">
+        <!-- Custom Attr-->
+        <item name="fontPath">fonts/mvboli.ttf</item>
+    </style>
+    <style name="TextAppearance.bkoodK" parent="android:TextAppearance">
+        <!-- Custom Attr-->
+        <item name="fontPath">fonts/BKoodkBd.ttf</item>
+    </style>
 </resources>

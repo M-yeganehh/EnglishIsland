@@ -1,5 +1,6 @@
 package englishisland.a123english.com.englishisland;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,10 +21,15 @@ import java.util.Locale;
 
 import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
 import englishisland.a123english.com.englishisland.Adapter.Pager_Adapter;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

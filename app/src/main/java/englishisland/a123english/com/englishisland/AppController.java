@@ -13,8 +13,9 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
 //mohamad commented
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("BYekan.ttf")
+                .setDefaultFontPath("fonts/BYekan.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

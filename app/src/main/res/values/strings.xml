@@ -24,7 +24,9 @@
     <string name="session8">جلسه هشتم</string>
     <string name="session9">جلسه نهم</string>
     <string name="title_activity_main">English Island</string>
-    <string name="key">MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwC5bP75wVyj0bVeQctnWmcIPajfGQcg8Iq40v7xGFvFvlWsUr05YK1JNZnfiwMXezFN8kQfL7KesmppXcThoXJJQcv2JhGdBfWntxnB2Gi1efuo9yo1Vn76MhSIxpaxSC8zSbloDz7qW</string>
+    <string name="key">MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwC5bP75wVyj0bVeQctnWmcIPajfGQcg8Iq40v7xGFvFvlWsUr05YK1JNZnfiwMXezFN8kQfL7KesmppXcThoXJJQcv2JhGdBfWntxnB2Gi1efuo9yo1Vn76MhSIxpaxSC8zSbloDz7qW/btzWJ0KhJcK97rDB2ReMwqNQFVzykxOq4+jo3XmSOABPT9ZSfqauqEqB9308IOj+MEzUZtKv2xbTvNcwZ5+0saW1SYTD8CAwEAAQ==</string>
+    <string name="videodl">دریافت فایل تصویری</string>
+    <string name="lesson1">Lesson one</string>
 
 
 </resources>

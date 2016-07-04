@@ -3,7 +3,7 @@
     package="englishisland.a123english.com.englishisland">
 
     <uses-permission android:name="com.farsitel.bazaar.permission.PAY_THROUGH_BAZAAR" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".AppController"
         android:allowBackup="true"
@@ -14,13 +14,12 @@
         <activity
             android:name=".Lesson_List"
             android:theme="@style/AppTheme.NoActionBar" />
-        ex.MainActivity
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".Splash"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Splash"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Class_Activity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
